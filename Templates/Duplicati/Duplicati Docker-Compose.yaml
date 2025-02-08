@@ -1,0 +1,25 @@
+services:
+  Duplicati:
+    image: lscr.io/linuxserver/duplicati:latest
+    container_name: Duplicati
+    hostname: Duplicati
+    networks:
+        - homelab
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Europe/Paris
+    volumes:
+      - /docker/duplicati:/config
+      - /mnt/hddbackup/Samba/Backups/Duplicati:/backups
+      - /home/emp83/:/source
+    ports:
+      - 8200:8200
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+    
+networks:
+    homelab:
+        external: true

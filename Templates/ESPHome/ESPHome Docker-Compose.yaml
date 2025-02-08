@@ -1,0 +1,26 @@
+services: 
+  Esphome:
+    container_name: Esphome
+    image: esphome/esphome
+    hostname: Esphome
+    networks:
+        - homelab
+    ports:
+      - "6052:6052"
+    volumes:
+      - /docker/esphome:/config:rw
+      - /etc/localtime:/etc/localtime:ro
+    # You do have to map a serial port here. Determine your port and uncomment.
+    #devices:
+    #  - /dev/ttyAMC0:/dev/ttyAMC0
+    environment: 
+      - TZ=Europe/Paris
+      - ESPHOME_DASHBOARD_USE_PING=true
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+    
+networks:
+    homelab:
+        external: true

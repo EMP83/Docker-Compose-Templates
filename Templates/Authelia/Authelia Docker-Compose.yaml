@@ -1,0 +1,21 @@
+services:
+  Authelia:
+    image: authelia/authelia:latest
+    container_name: Authelia
+    hostname: Authelia
+    networks:
+        - homelab
+    ports:
+      - 9091:9091
+    volumes:
+      - /docker/authelia:/config
+    environment:
+      - TZ=Europe/Paris
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+      
+networks:
+    homelab:
+        external: true

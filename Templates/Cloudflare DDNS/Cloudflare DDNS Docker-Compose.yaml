@@ -1,0 +1,24 @@
+services:
+  Cloudflare-DDNS:
+    container_name: Cloudflare-DDNS
+    image: oznu/cloudflare-ddns:latest
+    hostname: Cloudflare-DDNS
+    networks:
+        - homelab
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+      - API_KEY=KRdyWrSj-jcNYvvgJAh8KV7MyrmWYmZLmZ5RezIY
+      - ZONE=emp83.com
+      - PROXIED=false
+      - RRTYPE=A
+    restart: unless-stopped
+    
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+
+networks:
+    homelab:
+        external: true

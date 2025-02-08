@@ -1,0 +1,23 @@
+services:
+  AdGuardHome:
+    container_name: AdGuardHome
+    image: adguard/adguardhome
+    hostname: AdGuardHome
+    networks:
+      homelab-ipvlan:
+        ipv4_address: 172.16.1.240
+    ports:
+      - 3000:3000
+    environment:
+      - TZ=Europe/Paris
+    volumes:
+      - /docker/adguardhome/work:/opt/adguardhome/work
+      - /docker/adguardhome/conf:/opt/adguardhome/conf
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+
+networks:
+  homelab-ipvlan:
+    external: true

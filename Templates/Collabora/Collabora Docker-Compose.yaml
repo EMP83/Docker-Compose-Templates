@@ -1,0 +1,34 @@
+services: 
+  Collabora:
+    container_name: Collabora
+    image: collabora/code:latest
+    hostname: Collabora
+    cap_add: 
+      - MKNOD
+    tty: true
+    networks:
+      - homelab
+    ports:
+      - 9980:9980
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment: 
+      - TZ=Europe/Paris
+      - domain=collabora.emp83.com
+      - dictionaries= en_US fr_FR ro_RO
+      - VIRTUAL_HOST=collabora.domain.com
+      - VIRTUAL_PORT=9980
+      - VIRTUAL_PROTO=http
+      - username=emp83
+      - password=agafsththsjsatrj
+      - extra_params=--o:ssl.enable=false --o:ssl.termination=true --o:user_interface.mode=compact --o:net.proto=IPv4 --o:hexify_embedded_urls=true --o:logging.level=warning
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+      
+networks:
+    homelab:
+        external: true
+      

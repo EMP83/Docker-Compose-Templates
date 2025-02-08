@@ -1,0 +1,24 @@
+services:
+  File-Browser:
+    container_name: File-Browser
+    image: filebrowser/filebrowser:s6
+    hostname: File-Browser
+    environment:
+      - TZ=Europe/Paris
+      - PUID=1000
+      - PGID=1000
+    networks:
+        - homelab
+    ports:
+      - 9390:80
+    volumes:
+      - /:/srv
+      - /docker/filebrowser/filebrowser.db:/database/filebrowser.db
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+      
+networks:
+    homelab:
+        external: true

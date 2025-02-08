@@ -1,0 +1,28 @@
+services:
+  Grafana:
+    image: grafana/grafana:latest
+    container_name: Grafana
+    hostname: Grafana
+    user: "1000" # needs to be `id -u` // alternatively chown the grafana/data dir to 472:472
+    networks:
+        - homelab
+    ports:
+      - "3000:3000"
+    volumes:
+      - /docker/grafana:/var/lib/grafana # data path
+      - /docker/grafana/grafana.ini:/etc/grafana/grafana.ini
+      - /docker/grafana/provisioning:/etc/grafana/provisioning
+
+    environment:
+      - TZ=Europe/Paris
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+      - GF_SECURITY_ADMIN_USER=user
+      - GF_SECURITY_ADMIN_PASSWORD=fedFEgrhgrhTG
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+    
+networks:
+    homelab:
+        external: true

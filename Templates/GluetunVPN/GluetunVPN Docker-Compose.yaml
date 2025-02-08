@@ -1,0 +1,41 @@
+services:
+  GluetunVPN:
+    image: qmcgaw/gluetun:latest
+    container_name: GluetunVPN
+    hostname: GluetunVPN
+    cap_add:
+      - NET_ADMIN
+    networks:
+        - homelab
+    ports:
+      - 8091:8091/tcp # Web UI qBittorrrent
+    volumes:
+      - /docker/gluetunvpn:/gluetun
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+      - VPN_SERVICE_PROVIDER=nordvpn
+      - VPN_TYPE=wireguard
+      - WIREGUARD_IMPLEMENTATION=auto
+      - WIREGUARD_PRIVATE_KEY=jkgakljfgKJFlKGFHgkhgKGhGlkGJKGjlfagh=
+      - SERVER_REGIONS=Europe
+      - SERVER_COUNTRIES=France
+      - SERVER_CITIES=Paris
+      - SERVER_HOSTNAMES=fr773.nordvpn.com
+      - UPDATER_PERIOD=0
+      - PUBLICIP_ENABLED=true
+      - HEALTH_TARGET_ADDRESS=cloudflare.com:443
+      - HEALTH_VPN_DURATION_INITIAL=6s
+      - HEALTH_VPN_DURATION_ADDITION=5s
+      - HEALTH_SUCCESS_WAIT_DURATION=5s
+      - HEALTH_SERVER_ADDRESS=127.0.0.1:9999
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"  
+    restart: unless-stopped
+networks:
+    homelab:
+        external: true

@@ -1,0 +1,25 @@
+services:
+  HDDTemp:
+    image: drewster727/hddtemp-docker
+    container_name: HDDTemp
+    hostname: HDDTemp
+    privileged: true
+    networks:
+      - homelab
+    ports:
+      - 7634:7634
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev:/dev
+    environment:
+      - TZ=Europe/Paris
+      - HDDTEMP_ARGS=-q -d -F /dev/sd*
+      - PUID=1000
+      - PGID=1000
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"  
+networks:
+    homelab:
+        external: true

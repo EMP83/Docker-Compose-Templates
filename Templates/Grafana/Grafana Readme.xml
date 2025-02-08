@@ -1,0 +1,10 @@
+Before installation, the grafana.ini file must be created.
+This can be created with the command:
+<
+touch /path-to/config/grafana.ini
+>
+
+Example:
+<
+touch /docker/grafana/grafana.ini
+>

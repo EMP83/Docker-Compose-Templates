@@ -1,0 +1,23 @@
+services:
+  Glances:
+    container_name: Glances
+    image: nicolargo/glances:dev
+    #hostname: Glances
+    pid: host
+    network_mode: host
+    ports:
+      - 61208:61208
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro 
+      - /docker/glances/glances.conf:/etc/glances/glances.conf
+      - /:/rootfs:ro
+      - /etc/os-release:/etc/os-release:ro
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+      - GLANCES_OPT=-w
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
