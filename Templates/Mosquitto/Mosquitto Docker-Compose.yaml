@@ -1,0 +1,24 @@
+services:
+  Mosquitto-MQTT:
+    container_name: Mosquitto-MQTT
+    image: eclipse-mosquitto:latest
+    hostname: Mosquitto-MQTT
+    networks:
+        - homelab
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    environment:
+      - TZ=Europe/Paris
+    volumes:
+      - /docker/mosquitto/config:/mosquitto/config
+      - /docker/mosquitto/data:/mosquitto/data
+      - /docker/mosquitto/log:/mosquitto/log
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+      
+networks:
+    homelab:
+        external: true

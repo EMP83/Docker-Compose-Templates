@@ -1,0 +1,56 @@
+Create a new mosquitto.conf file inside the config folder:
+<
+touch /docker/mosquitto/config/mosquitto.conf
+>
+
+edit with nano and add:
+<
+persistence true
+persistence_location /mosquitto/data/
+
+log_dest stdout
+log_dest file /mosquitto/log/mosquitto.log
+log_type warning
+log_timestamp true
+connection_messages true
+
+listener 1883
+
+## Authentication ##
+#allow_anonymous false
+#password_file /mosquitto/config/password.txt
+>
+
+
+Start Mosquitto container and exec into 
+container to create a new user:
+<
+docker exec -it Mosquitto-MQTT /bin/sh
+>
+
+and run:
+<
+mosquitto_passwd -c /mosquitto/config/password.txt emp83
+> 
+emp83 is name of the user
+
+U can close the exec connection  by typing:
+<
+exit
+>
+and hit enter.
+
+Edit mosquitto.conf
+<
+sudo nano /docker/mosquitto/config/mosquitto.conf
+>
+Uncommented authentication lines:
+<
+allow_anonymous false
+password_file /mosquitto/config/password.txt
+>
+
+ctrl+o to save 
+ctrl+x to exit
+
+Restart Mosquitto container

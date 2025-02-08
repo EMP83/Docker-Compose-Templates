@@ -1,0 +1,28 @@
+services:
+  MariaDB:
+    image: lscr.io/linuxserver/mariadb:latest
+    container_name: MariaDB
+    hostname: MariaDB
+    networks:
+        - homelab
+    ports:
+      - 3306:3306
+    environment:
+      - TZ=Europe/Paris
+      - MYSQL_ROOT_PASSWORD=gglkjqpouteqetbjb
+      - MYSQL_DATABASE=npm
+      - MYSQL_USER=npm
+      - MYSQL_PASSWORD=mncxiuwqrqpewtjbfjks
+      - REMOTE_SQL=http://URL1/your.sql,https://URL2/your.sql
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /docker/mariadb:/config
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      - "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+           
+networks:
+    homelab:
+        external: true
