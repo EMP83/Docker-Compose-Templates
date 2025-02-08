@@ -1,0 +1,37 @@
+Portainer CE vs Portainer BE
+
+1) Portainer CE:
+
+Portainer CE is free and all its functionalities can be used by everyone without any restrictions.
+
+2) Portainer BE:
+Portainer BE is not free at the base but you can get a free license for 3 nodes.
+What does Portainer BE add compared to Portainer CE?
+<
+Identity & Access Management — Allows for more granularity and control over identity and access management.
+
+External Authentication Systems — Radically simplifies the connection to external authentication systems.
+
+Role-based Access Control (RBAC) — Enables role-based access control that defines who can do what, and where.
+
+Kubernetes-as-a-Service (KaaS) and MicroK8s provisioning — Allows for the direct setup and provisioning of 
+Kubernetes environments on KaaS providers such as Civo, Linode, DigitalOcean and more, 
+as well as MicroK8s onto new servers, from within the Portainer UI.
+
+Quota Management — Enforces quota management across all resources.
+
+Security Governance — Enables security governance such as single-sign-on, authentication, and activity logins.
+
+Rich Observability — Provides rich observability through integrations with external monitoring toolsets.
+
+Cost Management — Provides insight into resources consumed per person/team/app and calculates 
+the proportional cost to run the application as a percentage of overall costs.
+
+Disaster Recovery — Provides a ready means to DR enable Portainer itself.
+>
+
+You can obtain a free Portainer BE license that can be used on a maximum of 3 nodes.
+To obtain a free Portainer BE license, access this website:
+<
+https://www.portainer.io/take-3
+>

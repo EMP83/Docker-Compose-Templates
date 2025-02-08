@@ -1,0 +1,21 @@
+services:
+  Node-Red:
+    image: nodered/node-red:latest
+    container_name: Node-Red
+    hostname: Node-Red
+    environment:
+      - TZ=Europe/Paris
+    networks:
+        - homelab
+    ports:
+      - 1880:1880
+    volumes:
+      - /docker/nodered:/data
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+      
+networks:
+    homelab:
+        external: true

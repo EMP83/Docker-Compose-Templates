@@ -1,0 +1,23 @@
+services:
+  Pingvin-Share:
+    image: stonith404/pingvin-share
+    container_name: Pingvin-Share
+    hostname: Pingvin-Share
+    networks:
+        - homelab
+    ports:
+      - 3000:3000
+    volumes:
+      - /docker/pingvin-share/data:/opt/app/backend/data
+      - /docker/pingvin-share/uploads:/opt/app/frontend/public/img
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"  
+networks:
+    homelab:
+        external: true

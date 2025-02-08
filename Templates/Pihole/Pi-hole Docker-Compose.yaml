@@ -1,0 +1,30 @@
+services:
+  Pi-hole:
+    container_name: Pi-hole
+    image: pihole/pihole:latest
+    mac_address: de:ad:be:ef:ff:01
+    hostname: pihole
+    networks:
+      homelab-ipvlan:
+        ipv4_address: 172.16.1.241
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp" # Only required if you are using Pi-hole as your DHCP server
+      - "80:80/tcp"
+    environment:
+      - TZ=Europe/Paris
+      - WEBPASSWORD=kljgghsarhgabnrugh
+    volumes:
+      - /docker/pihole/etc-pihole:/etc/pihole
+      - /docker/pihole/etc-dnsmasq.d:/etc/dnsmasq.d
+    cap_add:
+      - NET_ADMIN # Required if you are using Pi-hole as your DHCP server, else not needed
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    
+networks:
+  homelab-ipvlan:
+    external: true

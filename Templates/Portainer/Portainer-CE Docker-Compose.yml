@@ -1,0 +1,23 @@
+services:
+  Portainer-CE:
+    container_name: Portainer-CE
+    image: portainer/portainer-ce:latest
+    hostname: Portainer-CE #optional
+    networks:
+      - homelab
+    ports:
+      - 8000:8000 # Edge Agent
+      - 9000:9000 # Web UI HTTP
+      - 9443:9443 # Web UI HTTPS
+    environment:
+      - TZ=Europe/Paris
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock 
+      - /docker/portainer/data:/data
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped 
+networks:
+    homelab:
+        external: true

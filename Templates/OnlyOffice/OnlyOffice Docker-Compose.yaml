@@ -1,0 +1,26 @@
+services:
+  OnlyOffice:
+    image: onlyoffice/documentserver:latest
+    container_name: OnlyOffice
+    hostname: OnlyOffice
+    networks:
+      - homelab
+    environment:
+      - TZ=Europe/Paris
+      - JWT_ENABLED=true
+      - JWT_SECRET=ahSaTjkkuydll0pqefbnmnd
+    ports:
+      - 2291:80
+    volumes:
+      - /docker/onlyoffice/data:/var/www/onlyoffice/Data
+      - /docker/onlyoffice/lib:/var/lib/onlyoffice
+      - /docker/onlyoffice/logs:/var/log/onlyoffice
+      - /docker/onlyoffice/db:/var/lib/postgresql
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+    
+networks:
+    homelab:
+        external: true

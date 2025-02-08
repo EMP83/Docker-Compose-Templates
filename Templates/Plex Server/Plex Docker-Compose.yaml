@@ -1,0 +1,42 @@
+services:
+  Plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: Plex
+    runtime: nvidia # Hardware acceleration nVidia. If not nVidia GPU the line can be removed.
+    networks:
+      - homelab
+    hostname: Plex
+    #tmpfs:
+    #  - /transcode:size=3G
+    ports:
+      - 32400:32400     # To access the Plex Media Server
+      - 1900:1900/udp   # To access the Plex DLNA Server
+      - 5353:5353/udp   # To acces older Bonjour/Avahi network discovery
+      - 8324:8324       # To control Plex for Roku via Plex Companion
+      - 32410:32410/udp # GDM network discovery (G’Day Mate discovery)
+      - 32412:32412/udp # GDM network discovery (G’Day Mate discovery)
+      - 32413:32413/udp # GDM network discovery (G’Day Mate discovery)
+      - 32414:32414/udp # GDM network discovery (G’Day Mate discovery)
+      - 32469:32469     # To access the Plex DLNA Server
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - VERSION=docker
+      - TZ=Europe/Paris
+      - PLEX_CLAIM=claim-xxxxxxxxxxxxxxxx # Claim token from https://plex.tv/claim. Tokens expire within 4 minutes.
+      - NVIDIA_VISIBLE_DEVICES=all # Hardware acceleration nVidia. If not nVidia GPU the line can be removed.
+    volumes:
+      - /docker/plex:/config
+      - /mnt/Storage/Multimedia:/Multimedia
+    devices: # Hardware acceleration Intel/ATI/AMD. If not Intel/ATI/AMD GPU the line can be removed.
+      - /dev/dri:/dev/dri # Hardware acceleration Intel/ATI/AMD. If not Intel/ATI/AMD GPU the line can be removed.
+    restart: unless-stopped
+    
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+
+networks:
+    homelab:
+        external: true

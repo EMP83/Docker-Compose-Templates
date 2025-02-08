@@ -1,0 +1,29 @@
+services:
+  qBittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qBittorrent
+    hostname: qBittorrent #optional
+    networks:
+        - homelab
+    ports:
+      - 8090:8090
+      - 6881:6881
+      - 6881:6881/udp
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+      - WEBUI_PORT=8090
+      - UMASK=002
+    volumes:
+      - /docker/qbittorrent/config:/config
+      - /docker/qbittorrent/downloads:/downloads
+      - /docker/qbittorrent/themes:/data/themes
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+
+networks:
+    homelab:
+        external: true

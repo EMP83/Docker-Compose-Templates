@@ -1,0 +1,26 @@
+services:
+  Redis:
+    image: bitnami/redis:latest
+    container_name: Redis
+    hostname: Redis #optional
+    user: root
+    networks:
+        - homelab
+    ports:
+      - 6379:6379
+    volumes:
+      - /docker/redis:/bitnami/redis/data
+    environment:
+      - TZ=Europe/Paris
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_EXTRA_FLAGS=--auto-aof-rewrite-percentage 100 --auto-aof-rewrite-min-size 64mb
+      - REDIS_PASSWORD=faeygyus6qtutru
+      - vm.overcommit_memory=1
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+      
+networks:
+    homelab:
+        external: true

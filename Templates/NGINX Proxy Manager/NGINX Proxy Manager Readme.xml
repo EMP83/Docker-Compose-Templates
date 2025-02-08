@@ -1,0 +1,36 @@
+If a host with problems needs to be removed, it can be found at this path:
+<
+/docker/nginxproxymanager/data/nginx/proxy_host
+>
+
+Theming:
+
+The line below takes care of theming
+<
+- /docker/nginxproxymanager/themes/:/etc/cont-init.d
+>
+
+The path must be created in advance:
+<
+sudo mkdir -p /docker/nginxproxymanager/themes
+>
+
+Next we need to create the script that handles the themes:
+<
+sudo touch /docker/nginxproxymanager/themes/98-themepark-nginx-proxy-manager
+>
+
+Now we will edit our script to add the script content:
+<
+sudo nano /docker/nginxproxymanager/themes/98-themepark-nginx-proxy-manager
+>
+
+and add the contents of the 98-themepark-nginx-proxy-manager file from the Themes folder.
+Save and exit.
+
+The script must be made executable:
+<
+sudo chmod +x /docker/nginxproxymanager/themes/98-themepark-nginx-proxy-manager
+>
+
+Now Nginx Proxy Manager can be launched in Portainer or docker-compose.

@@ -1,0 +1,22 @@
+services:
+  Portainer_Agent:
+    container_name: Portainer-Agent
+    image: portainer/agent
+    hostname: Portainer-Agent #optional
+    networks:
+      - homelab
+    ports:
+      - 9001:9001
+    environment:
+      - TZ=Europe/Paris
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+    
+networks:
+    homelab:
+        external: true
+

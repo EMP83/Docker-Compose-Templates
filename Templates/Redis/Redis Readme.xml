@@ -1,0 +1,18 @@
+Fix for Memory overcommit from log
+
+WARNING Memory overcommit must be enabled! Without it, 
+a background save or replication may fail under low memory condition. B
+eing disabled, it can also cause failures without low memory condition, 
+see https://github.com/jemalloc/jemalloc/issues/1328. To fix this issue 
+add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run 
+the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+
+On the host machine run:
+<
+sudo nano /etc/sysctl.conf
+>
+and at the end add:
+<
+vm.overcommit_memory = 1
+>
+Save and reboot

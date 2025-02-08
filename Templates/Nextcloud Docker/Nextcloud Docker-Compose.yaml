@@ -1,0 +1,30 @@
+services:
+  Nextcloud:
+    image: lscr.io/linuxserver/nextcloud:latest
+    container_name: Nextcloud
+    hostname: Nextcloud
+    networks:
+      - homelab
+    ports:
+      - 443:443
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+      - MYSQL_PASSWORD=fnmkhspowbnfbx # To be configured in MariaDB
+      - MYSQL_DATABASE=nextcloud # To be configured in MariaDB
+      - MYSQL_USER=nextcloud # To be configured in MariaDB
+      - MYSQL_HOST=mariadb # To be configured in MariaDB
+      - REDIS_HOST=redis # To be configured in Redis
+      - REDIS_HOST_PASSWORD=hsjsikjpqmzmbvvz # To be configured in Redis
+    volumes:
+      - /docker/nextcloud/config:/config
+      - /mnt/nextcloud/data:/data
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+
+networks:
+    homelab:
+        external: true
