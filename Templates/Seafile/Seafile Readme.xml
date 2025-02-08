@@ -1,0 +1,16 @@
+To be able to upload files after installation, 
+the IP address must be set in the application, 
+in the System Admin/Settings section
+
+<
+SERVICE_URL http://172.16.1.21:853
+The URL of the server, like https://seafile.example.com or http://192.168.1.2:8000
+>
+and
+<
+FILE_SERVER_ROOT http://172.16.1.21:853/seafhttp
+The internal URL for downloading/uploading files. 
+Users will not be able to download/upload files if this is not set correctly. 
+If you config Seafile behind Nginx/Apache, it should be SERVICE_URL/seafhttp, 
+like https://seafile.example.com/seafhttp .
+>

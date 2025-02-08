@@ -1,0 +1,32 @@
+services:
+  Stirling-PDF:
+    image: stirlingtools/stirling-pdf:latest
+    container_name: Stirling-PDF
+    hostname: Stirling-PDF
+    networks:
+      - homelab
+    ports:
+      - '8080:8080'
+    volumes:
+      - /docker/stirlingpdf/trainingData:/usr/share/tessdata # Required for extra OCR languages
+      - /docker/stirlingpdf/extraConfigs:/configs
+      - /docker/stirlingpdf/customFiles:/customFiles/
+      - /docker/stirlingpdf/logs:/logs/
+      - /docker/stirlingpdf/pipeline:/pipeline/
+    environment:
+      - TZ=Europe/Paris
+      - DOCKER_ENABLE_SECURITY=true
+      - LANGS=fr_FR
+      - METRICS_ENABLED=true
+      - UI_APP_NAME=Stirling PDF
+      - UI_APP_NAVBAR_NAME=Stirling PDF
+      - UI_HOME_DESCRIPTION= Your locally hosted one-stop-shop for all your PDF needs.
+      - SYSTEM_CONNECTIONTIMEOUTMINUTES=3000000
+      - SYSTEM_ROOT_URI_PATH=/
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+networks:
+    homelab:
+        external: true

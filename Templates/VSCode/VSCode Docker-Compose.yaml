@@ -1,0 +1,26 @@
+services:
+  VS-Code:
+    container_name: VS-Code
+    image: lscr.io/linuxserver/code-server:latest
+    networks:
+        - homelab
+    ports:
+      - "8443:8443"
+    volumes:
+      # Set <project dir> to the directory you want to open in VS Code.
+      - /docker/vscode:/config 
+      # <vs code config> should point to a local dir where vs code stores its data.
+      - /docker/hassos/config:/config/workspace
+    environment:
+      - TZ=Europe/Paris
+      - PUID=1000
+      - PGID=1000
+      - PROXY_DOMAIN=code-server.mydomain.com
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+      
+networks:
+    homelab:
+        external: true

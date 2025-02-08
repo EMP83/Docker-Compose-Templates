@@ -1,0 +1,29 @@
+services:
+  Watchtower:
+    container_name: Watchtower
+    image: containrrr/watchtower
+    hostname: Watchtower
+    networks:
+        - homelab
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - TZ=Europe/Paris
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_REMOVE_VOLUMES=true
+      - WATCHTOWER_NOTIFICATIONS_LEVEL=debug
+      - WATCHTOWER_LABEL_ENABLE=true
+      - WATCHTOWER_INCLUDE_RESTARTING=true
+      - WATCHTOWER_NOTIFICATIONS_LEVEL=info
+      - WATCHTOWER_SCHEDULE=0 00 4 * * ?
+      #- WATCHTOWER_POLL_INTERVAL=86400
+      - WATCHTOWER_NOTIFICATION_URL=telegram://123789786787:hhthzrhthzhhzhjukuhvkcukcvkc@telegram/?channels=161845152
+      - WATCHTOWER_NOTIFICATION_EMAIL_DELAY=2
+      # - WATCHTOWER_MONITOR_ONLY: 'true'
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    restart: unless-stopped
+
+networks:
+    homelab:
+        external: true

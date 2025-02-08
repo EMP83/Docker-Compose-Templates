@@ -1,0 +1,37 @@
+services:
+  Wireguard:
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: Wireguard
+    hostname: Wireguard
+    networks:
+        - homelab
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+      - SERVEURURL=wireguard.emp83.com # External IP or domain name for docker host.
+      - SERVERPORT=51820 # External port for docker host. Used in server mode
+      - PEERS=5 #Number of peers to create confs for. Can also be a list: myPC,myPhone (alphanumeric only)
+      - PEERDNS=auto #optional
+      - INTERNAL_SUBNET=10.10.10.0 #optional
+      - ALLOWEDIPS=0.0.0.0/0 #optional
+      - LOG_CONFS=true
+    volumes:
+      - /docker/wireguard:/config
+      - /lib/modules:/lib/modules
+    ports:
+      - 51820:51820/udp
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+    
+networks:
+    homelab:
+        external: true
+

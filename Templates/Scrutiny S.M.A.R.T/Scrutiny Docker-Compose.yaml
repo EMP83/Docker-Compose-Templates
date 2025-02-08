@@ -1,0 +1,31 @@
+services:
+  Scrutiny:
+    image: ghcr.io/analogj/scrutiny:master-omnibus
+    container_name: Scrutiny
+    hostname: Scrutiny
+    cap_add:
+      - SYS_RAWIO
+      - SYS_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+      - COLLECTOR_RUN_STARTUP=true
+      - COLLECTOR_RUN_STARTUP_SLEEP=10
+      - COLLECTOR_CRON_SCHEDULE=*/15 * * * *
+    volumes:
+      - /docker/scrutiny/config:/opt/scrutiny/config
+      - /docker/scrutiny/influxdb:/opt/scrutiny/influxdb
+      - /run/udev:/run/udev:ro
+    networks:
+      - homelab
+    ports:
+      - 8080:8080 # webapp
+      - 8086:8086 # influxDB admin
+    devices:
+      - /dev/sda:/dev/sda
+      - /dev/sdb:/dev/sdb
+    restart: unless-stopped
+networks:
+    homelab:
+        external: true

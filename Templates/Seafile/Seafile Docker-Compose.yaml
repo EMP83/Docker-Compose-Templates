@@ -1,0 +1,62 @@
+services:
+  Seafile-MySQL:
+    image: mariadb:10.11
+    container_name: Seafile-MySQL
+    hostname: Seafile-MySQL #optional
+    networks:
+      - homelab
+    environment:
+      - MYSQL_ROOT_PASSWORD=N6yl@7uKRuKQcf^CVD3x  # Required, set the root's password of MySQL service.
+      - MYSQL_LOG_CONSOLE=true
+      - MARIADB_AUTO_UPGRADE=1
+    volumes:
+      - /docker/seafile-mysql:/var/lib/mysql  # Required, specifies the path to MySQL data persistent store.
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      - "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+
+
+  Seafile-MemCached:
+    image: memcached:1.6.18
+    container_name: Seafile-MemCached
+    entrypoint: memcached -m 256
+    hostname: Seafile-MemCached #optional
+    networks:
+      - homelab
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      - "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+
+    
+  Seafile:
+    image: seafileltd/seafile-mc:11.0-latest
+    container_name: Seafile
+    hostname: Seafile #optional
+    networks:
+      - homelab
+    ports:
+      - "80:80"
+#     - "443:443"  # If https is enabled, cancel the comment.
+    volumes:
+      - /docker/seafile:/shared   # Required, specifies the path to Seafile data persistent store.
+    environment:
+      - DB_HOST=Seafile-MySQL
+      - DB_ROOT_PASSWD=N6yl@7uKRuKQcf^CVD3x   # Required, the value should be root's password of MySQL service.
+      - TZ=Europe/Paris  # Optional, default is UTC. Should be uncomment and set to your local time zone.
+      - SEAFILE_ADMIN_EMAIL=me@example.com # Specifies Seafile admin user, default is 'me@example.com'.
+      - SEAFILE_ADMIN_PASSWORD=rJ&TQV4rh8gvkWHa#xW4     # Specifies Seafile admin password, default is 'asecret'.
+      - SEAFILE_SERVER_LETSENCRYPT=false   # Whether to use https or not.
+      - SEAFILE_SERVER_HOSTNAME=seafile.emp83.com # Specifies your host name if https is enabled.
+    depends_on:
+      - Seafile-MySQL
+      - Seafile-MemCached
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      - "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+
+networks:
+    homelab:
+        external: true

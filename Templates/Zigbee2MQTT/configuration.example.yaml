@@ -1,0 +1,36 @@
+# Indicates the configuration version (used by configuration migrations)
+version: 4
+
+# Home Assistant integration (MQTT discovery)
+homeassistant:
+    enabled: false
+
+# Enable the frontend, runs on port 8080 by default
+frontend:
+    enabled: true
+    port: 8080
+    host: 0.0.0.0
+# Optional, enables authentication, disabled by default, cleartext (no hashing required)
+    #auth_token: your-secret-token
+
+# MQTT settings
+mqtt:
+    base_topic: zigbee2mqtt
+    server: 'mqtt://localhost'
+    user: my_user
+    password: my_password
+
+# Adapter settings
+serial:
+    port: /dev/ttyUSB0
+    adapter: zstack
+    baudrate: 115200
+
+
+# Advanced settings
+advanced:
+    transmit_power: 20
+    channel: 25
+    network_key: GENERATE
+    pan_id: GENERATE
+    ext_pan_id: GENERATE

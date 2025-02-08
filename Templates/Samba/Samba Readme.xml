@@ -1,0 +1,46 @@
+Official Readme and full docker-compose file:
+<
+https://github.com/ServerContainers/samba
+
+https://github.com/ServerContainers/samba/blob/master/docker-compose.yml
+>
+
+
+These are the basic steps that must be performed before installing samba in docker::
+
+
+1) A group must be created to be used by multiple users in Samba:
+<
+sudo groupadd -g 1500 share
+>
+
+2) Users that will use samba need to be created if they are not already created.:
+<
+sudo adduser maxime
+
+sudo usermod -aG sudo maxime # numai daca vreti ca acest user sa aibe drepturi de root in sistem
+>
+
+3) Users who will use samba will need to be added to this group:
+<
+sudo usermod -aG share emp83
+
+sudo usermod -aG share maxime
+>
+
+4) The folders to be shared must be created:
+<
+sudo mkdir shares
+sudo mkdir /shares/jellyfin
+sudo mkdir /shares/plex
+>
+
+5) The owner and group of these folders must be changed.:
+<
+sudo chown -R emp83:share /shares/
+>
+
+6) The permissions of these folders need to be changed.:
+<
+sudo chmod 775 -R /shares/
+>

@@ -1,0 +1,71 @@
+Go to vscode market place from the vscode app and search for the above extensions, 
+one at a time, and download them.
+
+Log File Highlighter
+<
+emilast.LogFileHighlighter
+>
+
+Home Assistant Config Helper
+<
+keesschollaart.vscode-home-assistant
+>
+
+Material Design Icons Intellisense
+<
+lukas-tr.materialdesignicons-intellisense
+>
+
+indent-rainbow
+<
+oderwat.indent-rainbow
+>
+
+YAML
+<
+redhat.vscode-yaml
+>
+
+Error Lens
+<
+usernamehw.errorlens
+>
+
+UUID Generator
+<
+motivesoft.vscode-uuid-generator
+>
+
+ESPHome
+<
+ESPHome.esphome-vscode
+>
+
+vscode-icons
+<
+vscode-icons-team.vscode-icons
+>
+
+
+They can also be downloaded manually from this website:
+<
+https://marketplace.visualstudio.com/
+>
+
+
+
+How to fix 
+<
+Unable to watch for file changes in this large workspace folder in Vscode
+>
+
+ssh into host and run:
+<
+sudo nano  /etc/sysctl.conf
+>
+and add
+<
+fs.inotify.max_user_watches=524288
+>
+
+Save and reboot

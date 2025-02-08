@@ -1,0 +1,32 @@
+First thing, the folder structure needs to be created:
+<
+mkdir -p /docker/sftpgo/backups
+mkdir -p /docker/sftpgo/data
+mkdir -p /docker/sftpgo/home
+mkdir -p /docker/sftpgo/surveillance
+>
+
+The owner and permissions of the user running sftpgo in docker need to be set.
+In my case the user is emp83:
+
+The owner:
+<
+sudo chown emp83:emp83 /docker/sftpgo/*
+>
+
+Permissions:
+<
+sudo chmod 775 /docker/sftpgo/*
+>
+
+
+We only need this line if we intend to send files via sftp and we want them to be accessed with Samba.
+<
+mkdir -p /docker/sftpgo/surveillance
+>
+
+We don't need to create:
+<
+/docker/sftpgo/mysql
+>
+This will be created automatically.

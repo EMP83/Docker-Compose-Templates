@@ -1,0 +1,30 @@
+services:
+  Zigbee2MQTT:
+    container_name: Zigbee2MQTT
+    image: koenkk/zigbee2mqtt
+    hostname: Zigbee2MQTT
+    networks:
+        - homelab
+    ports:
+      - 8099:8099
+    environment:
+      - TZ=Europe/Paris
+    volumes:
+      - /docker/zigbee2mqtt:/app/data # Path for configuration.yaml
+      - /run/udev:/run/udev:ro
+    devices:
+        - /dev/ttyUSB0:/dev/ttyUSB0
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+    privileged: true
+      
+networks:
+    homelab:
+        external: true
+

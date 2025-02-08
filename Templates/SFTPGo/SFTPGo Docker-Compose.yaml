@@ -1,0 +1,67 @@
+services:
+  SFTPGo:
+    image: drakkan/sftpgo:latest
+    container_name: SFTPGo
+    hostname: SFTPGo
+    networks:
+      - network
+    ports:
+      - 8080:8080
+      - 2022:2022
+      - 8443:443
+      - 5007:5007
+    volumes:
+      - /docker/sftpgo/data:/srv/sftpgo
+      - /docker/sftpgo/home:/var/lib/sftpgo
+      - /docker/sftpgo/backups:/srv/sftpgo/backups
+      - /docker/sftpgo/surveillance:/surveillance # Optional - User mount to store data sent via SFTP
+    environment:
+      - TZ=Europe/Paris
+      - PUID=1000
+      - PGID=1000
+      - SFTPGO_HTTPD_BINDINGS_0_PORT=8080
+      - SFTPGO_HTTPD_BINDINGS_0_ADDRESS=0.0.0.0
+      - SFTPGO_WEBDAVD_BINDINGS_0_PORT=5007
+      - SFTPGO_FTPD_BINDINGS_0_PORT=2121
+      - SFTPGO_FTPD_BINDINGS_0_FORCE_PASSIVE_IP=172.16.1.21:8080
+      - SFTPGO_FTPD__PASSIVE_PORT_RANGE__START=50000
+      - SFTPGO_FTPD__PASSIVE_PORT_RANGE__END=50100
+      - SFTPGO_FTPD__BINDINGS__0__DEBUG=1 # 0=false
+      - SFTPGO_DATA_PROVIDER__USERNAME=sftpgo # please change
+      - SFTPGO_DATA_PROVIDER__PASSWORD=password # please change
+      - SFTPGO_COMMON__DEFENDER__ENABLED=true
+      - SFTPGO_COMMON__DEFENDER__BAN_TIME=15
+      - SFTPGO_COMMON__DEFENDER__BAN_TIME_INCREMENT=100
+      - SFTPGO_COMMON__DEFENDER__THRESHOLD=5
+      - SFTPGO_COMMON__DEFENDER__OBSERVATION_TIME=15
+      - SFTPGO_DATA_PROVIDER__DRIVER=mysql
+      - SFTPGO_DATA_PROVIDER__NAME=sftpgo
+      - SFTPGO_DATA_PROVIDER__HOST=MySQL_SFTPGo
+      - SFTPGO_DATA_PROVIDER__PORT=3306
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+      
+  MySQL_SFTPGo:
+    image: mysql:latest
+    container_name: MySQL_SFTPGo
+    hostname: MySQL_SFTPGo
+    networks:
+      - network
+    environment:
+      - TZ=Europe/Paris
+      - MYSQL_DATABASE=sftpgo
+      - MYSQL_USER=sftpgo # please change    
+      - MYSQL_PASSWORD=password # please change
+      - MYSQL_ROOT_PASSWORD=password
+    volumes:
+      - /docker/sftpgo/mysql:/var/lib/mysql
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+      
+networks:
+    network:
+        driver: bridge

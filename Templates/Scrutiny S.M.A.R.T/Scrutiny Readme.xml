@@ -1,0 +1,27 @@
+The 2 configuration files are not created automatically. 
+They must be added manually to the config folder.
+<
+scrutiny.yaml
+collector.yaml
+>
+
+
+
+
+InfluxDB Credentials
+
+User Name:
+<
+admin
+>
+
+Passsword:
+<
+password12345
+>
+
+For manual S.M.A.R.T information update,run on host:
+<
+docker exec Scrutiny /opt/scrutiny/bin/scrutiny-collector-metrics run
+>
+

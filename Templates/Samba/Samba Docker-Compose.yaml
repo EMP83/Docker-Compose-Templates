@@ -1,0 +1,49 @@
+services:
+  Samba:
+    image: ghcr.io/servercontainers/samba
+    container_name: Samba
+    network_mode: host
+    # uncomment to solve bug: https://github.com/ServerContainers/samba/issues/50 - wsdd2 only - not needed for samba
+    cap_add:
+      - CAP_NET_ADMIN
+    environment:
+      TZ: Europe/Paris
+      # uncomment to enable fail fast (currently only fails fast if there are conflicts/errors during user/group creation)
+      #FAIL_FAST: 1
+
+      MODEL: 'TimeCapsule'
+      AVAHI_NAME: Ubuntu-Server
+
+      SAMBA_CONF_LOG_LEVEL: 3
+
+      # uncomment to disable optional services
+      #WSDD2_DISABLE: 1
+      #AVAHI_DISABLE: 1
+      #NETBIOS_DISABLE: 1
+      
+      GROUP_share: 1500
+      
+      ACCOUNT_emp83: password
+      UID_emp83: 1000
+      GROUPS_emp83: share
+
+      #ACCOUNT_maxime: 78488 # if multi users
+      #UID_maxime: 1001 # if multi users
+      #GROUPS_maxime: share # if multi users
+
+      SAMBA_VOLUME_CONFIG_jellyfin: "[Jellyfin]; path=/shares/jellyfin; valid users = emp83; guest ok = no; read only = no; browseable = yes"
+      SAMBA_VOLUME_CONFIG_plex: "[Plex]; path=/shares/plex; valid users = emp83; guest ok = no; read only = no; browseable = yes"
+      #SAMBA_VOLUME_CONFIG_jellyfin: "[Jellyfin]; path=/shares/jellyfin; valid users = emp83, maxime; guest ok = no; read only = no; browseable = yes" # if multi users
+      #SAMBA_VOLUME_CONFIG_plex: "[Plex]; path=/shares/plex; valid users = emp83, maxime; guest ok = no; read only = no; browseable = yes" # if multi users
+
+      
+
+    volumes:
+      - /etc/avahi/services/:/external/avahi
+
+      - /shares/jellyfin:/shares/jellyfin
+      - /shares/plex:/shares/plex
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
