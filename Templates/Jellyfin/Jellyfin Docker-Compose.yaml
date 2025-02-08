@@ -1,0 +1,36 @@
+services:
+  Jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: Jellyfin
+    runtime: nvidia # Hardware acceleration nVidia. If not nVidia GPU the line can be removed.
+    hostname: Jellyfin
+    tmpfs:
+      - /config/cache/transcodes:size=3G
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=Europe/Paris
+      - JELLYFIN_PublishedServerUrl=https://jellyfin.emp83.com #optional
+      - NVIDIA_VISIBLE_DEVICES=all # Hardware acceleration nVidia. If not nVidia GPU the line can be removed.
+    volumes:
+      - /docker/jellyfin:/config
+      - /mnt/Multimedia/Plex:/Plex
+      - /mnt/Multimedia/Jellyfin:/Jellyfin
+    networks:
+        - homelab
+    ports:
+      - 8096:8096
+      - 8920:8920 #optional
+      - 7359:7359/udp #optional
+      #- 1920:1900/udp #optional
+    devices: # Hardware acceleration Intel/ATI/AMD. If not Intel/ATI/AMD GPU the line can be removed.
+      - /dev/dri:/dev/dri # Hardware acceleration Intel/ATI/AMD. If not Intel/ATI/AMD GPU the line can be removed.
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+    
+networks:
+    homelab:
+        external: true

@@ -1,0 +1,25 @@
+services:
+  Homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: Homepage
+    hostname: Homepage
+    networks:
+        - homelab
+    ports:
+      - 3000:3000
+    volumes:
+      - /docker/homepage:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /docker/homepage/icons:/app/public/icons
+      - /docker/homepage/images:/app/public/images
+    environment:
+      - TZ=Europe/Paris
+      - PUID=1000
+      - PGID=1000
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"  
+networks:
+    homelab:
+        external: true

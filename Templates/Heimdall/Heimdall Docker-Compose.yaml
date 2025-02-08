@@ -1,0 +1,24 @@
+services:
+  Heimdall:
+    image: lscr.io/linuxserver/heimdall:latest
+    container_name: Heimdall
+    hostname: Heimdall
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+    networks:
+        - homelab
+    ports:
+      - 87:80
+      - 13443:443
+    volumes:
+      - /docker/heimdall:/config
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+      
+networks:
+    homelab:
+        external: true

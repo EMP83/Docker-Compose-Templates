@@ -1,0 +1,17 @@
+1) The first step we will create the folder structure:
+<
+mkdir -p /docker/hassos/config
+mkdir -p /docker/hassos/media
+>
+
+2) Set the correct permissions for config folder:
+
+<
+sudo chown youruser:root config/
+>
+
+Example:
+<
+sudo chown emp83:root config/
+>
+

@@ -1,0 +1,24 @@
+services:
+  Home-Assistant:
+    container_name: Home-Assistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    user: "1000" # Must match the host user, This line is only needed if you intend to access the config folder with Samba or VSCode.
+    network_mode: host
+    ports:
+      - 8123:8123
+    environment:
+      - TZ=Europe/Paris
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+    volumes:
+      - /docker/hassos/config:/config
+      - /docker/hassos/media:/media
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+    privileged: true
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      - "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+

@@ -1,0 +1,14 @@
+The option to transcode in RAM is used to protect the SSD from too much wear and tear.
+Today's SSDs are powerful enough that we don't need transcoding in RAM but if anyone, 
+wants an extra measure of protection you can find it below.
+
+<
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    tmpfs:  # Transcode in RAM, add this line only if you are using RAM transcoding.
+      - /config/cache/transcodes:size=3G # Transcode in RAM, add this line only if you are using RAM transcoding.
+>
+
+3G represents the amount of RAM allocated to Plex to use during transcoding. 	  
+Do not allocate more than half of the host's RAM.

@@ -1,0 +1,23 @@
+services:
+  Hyperion-NG:
+    image: foorschtbar/hyperion
+    container_name: Hyperion-NG
+    hostname: Hyperion-NG
+    networks:
+        - homelab
+    ports:
+      - 19445:19445 # Protobuffer
+      - 19400:19400 # Flatbuffer
+      - 19444:19444 # JSON-Server
+      - 8090:8090   # Web UI HTTP
+    volumes:
+      - /docker/hyperion-ng:/root/.hyperion
+    environment:
+      - TZ=Europe/Paris
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"  
+networks:
+    homelab:
+        external: true

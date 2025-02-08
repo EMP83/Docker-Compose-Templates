@@ -1,0 +1,27 @@
+services:
+  InfluxDB:
+    container_name: InfluxDB
+    image: influxdb:influxdb:2.7
+    hostname: InfluxDB
+    networks:
+        - homelab
+    ports:
+      - 8086:8086
+    environment:
+      - TZ=Europe/Paris
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=homeassistant
+      - DOCKER_INFLUXDB_INIT_PASSWORD=kuussiioawermbmnb
+      - DOCKER_INFLUXDB_INIT_ORG=home
+      - DOCKER_INFLUXDB_INIT_BUCKET=assistant
+    volumes:
+      - /docker/influxdb/data:/var/lib/influxdb2
+      - /docker/influxdb/config:/etc/influxdb2
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+      
+networks:
+    homelab:
+        external: true

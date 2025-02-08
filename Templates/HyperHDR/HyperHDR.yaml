@@ -1,0 +1,29 @@
+services:
+  HyperHDR:
+    container_name: HyperHDR
+    image: "nocturno/hyper-hdr:latest"
+    hostname: HyperHDR
+    networks:
+        - homelab
+    ports:
+      - 8090:8090
+      - 8092:8092
+      - 19444:19444
+      - 19400:19400
+      - 19445:19445
+      - 19333:19333
+      - 5568:5568
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+    volumes:
+      - /docker/hyperhdr:/config
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+    privileged: true
+networks:
+    homelab:
+        external: true

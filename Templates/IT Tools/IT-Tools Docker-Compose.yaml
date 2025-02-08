@@ -1,0 +1,18 @@
+services:
+  IT-Tools:
+    image: corentinth/it-tools:latest
+    container_name: IT-Tools
+    hostname: IT-Tools
+    networks:
+      - homelab
+    ports:
+      - 8080:80
+    environment:
+      - TZ=Europe/Paris
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only" 
+networks:
+  homelab:
+    external: true

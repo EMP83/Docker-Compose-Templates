@@ -1,0 +1,111 @@
+services:
+  Immich-Server:
+    container_name: Immich-Server
+    image: ghcr.io/immich-app/immich-server:release
+    hostname: Immich-Server
+    networks:
+        - network
+    volumes:
+      - /docker/immich/media:/media
+      - /docker/immich/upload:/usr/src/app/upload
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - TZ=Europe/Paris
+      - DB_HOSTNAME=Immich_Postgres
+      - DB_PASSWORD=hhsta4mjujszhukopw
+      - DB_USERNAME=immich
+      - DB_DATABASE_NAME=immich
+      - IMMICH_TRUSTED_PROXIES=172.16.1.20
+      - REDIS_HOSTNAME=Immich_Redis
+      - PUID=1000
+      - PGID=1000
+    ports:
+      - 2283:2283
+    devices:
+      - /dev/dri:/dev/dri
+    healthcheck:
+      disable: false
+    depends_on:
+      - Immich_Redis
+      - Immich_Postgres
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only" 
+    restart: unless-stopped
+      
+      
+  immich-machine-learning:
+    container_name: immich-machine-learning
+    image: ghcr.io/immich-app/immich-machine-learning:release-openvino
+        # For hardware acceleration, add one of -[armnn, cuda, openvino] to the image tag.
+        # Example tag: ${IMMICH_VERSION:-release}-cuda
+    hostname: immich-machine-learning
+    networks:
+        - network
+    volumes:
+      - /docker/immich/model-cache:/cache
+    environment:
+      - TZ=Europe/Paris
+    devices:
+      - /dev/dri:/dev/dri
+    healthcheck:
+      disable: false
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only" 
+    restart: unless-stopped
+
+  Immich_Redis:
+    container_name: Immich_Redis
+    image: docker.io/redis:6.2-alpine@sha256:905c4ee67b8e0aa955331960d2aa745781e6bd89afc44a8584bfd13bc890f0ae
+    hostname: Immich_Redis
+    networks:
+        - network
+    healthcheck:
+      test: redis-cli ping || exit 1
+    environment:
+      - TZ=Europe/Paris
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only" 
+    restart: unless-stopped
+
+  Immich_Postgres:
+    container_name: Immich_Postgres
+    image: docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0
+    hostname: Immich_Postgres
+    networks:
+        - network
+    environment:
+      - TZ=Europe/Paris
+      - POSTGRES_PASSWORD=hhsta4mjujszhukopw
+      - POSTGRES_USER=immich
+      - POSTGRES_DB=immich
+      - POSTGRES_INITDB_ARGS=--data-checksums
+    volumes:
+      - /docker/immich/postgresql:/var/lib/postgresql/data
+    healthcheck:
+      test: >-
+        pg_isready --dbname="$${POSTGRES_DB}" --username="$${POSTGRES_USER}" || exit 1;
+        Chksum="$$(psql --dbname="$${POSTGRES_DB}" --username="$${POSTGRES_USER}" --tuples-only --no-align
+        --command='SELECT COALESCE(SUM(checksum_failures), 0) FROM pg_stat_database')";
+        echo "checksum failure count is $$Chksum";
+        [ "$$Chksum" = '0' ] || exit 1
+      interval: 5m
+      start_interval: 30s
+      start_period: 5m
+    command: >-
+      postgres
+      -c shared_preload_libraries=vectors.so
+      -c 'search_path="$$user", public, vectors'
+      -c logging_collector=on
+      -c max_wal_size=2GB
+      -c shared_buffers=512MB
+      -c wal_compression=on
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only" 
+    restart: unless-stopped
+networks:
+  network:
+    driver: bridge

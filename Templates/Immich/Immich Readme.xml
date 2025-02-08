@@ -1,0 +1,29 @@
+Before installing Immich, the folder structure must be created:
+<
+mkdir -p /docker/immich/upload
+mkdir -p /docker/immich/media
+mkdir -p /docker/immich/model-cache
+mkdir -p /docker/immich/model-cache
+mkdir -p /docker/immich/postgresql
+>
+
+If you want to add existing media files, they must be placed in:
+<
+- /docker/immich/media:/media
+>
+
+If you intend to use samba to add media files it is recommended that, 
+the permissions of the media folder belong to the same user used in Samba.
+
+We will set the permissions and ownership with the 'chmod' and 'chown' commands:
+<
+sudo chown user:group /docker/immich/media
+sudo chmod 775 /docker/immich/media
+>
+Example:
+<
+sudo chown emp83:emp83 /docker/immich/media
+sudo chmod 775 /docker/immich/media
+>
+
+After these steps Immich can be installed via docker-compose or Portainer
