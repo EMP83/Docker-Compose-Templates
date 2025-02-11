@@ -16,7 +16,7 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=USERNAME
       - MONGO_INITDB_ROOT_PASSWORD=PASSWORD
-    labels:  # Prevent Komodo from stopping with StopAllContainers
+    labels:
       - "com.centurylinklabs.watchtower.enable=true"
       #- "com.centurylinklabs.watchtower.monitor-only"
     restart: unless-stopped
@@ -61,8 +61,7 @@ services:
       # - /path/to/syncs:/syncs
       ## Optionally mount a custom core.config.toml
       # - /path/to/core.config.toml:/config/config.toml
-    labels: # Prevent Komodo from stopping with StopAllContainers
-      - "komodo.skip:" # Prevent Komodo from stopping with StopAllContainers
+    labels:
       - "com.centurylinklabs.watchtower.enable=true"
       #- "com.centurylinklabs.watchtower.monitor-only"
     restart: unless-stopped
@@ -88,7 +87,7 @@ services:
       - /docker/komodo/repos:/etc/komodo/repos
       - /docker/komodo/stacks:/etc/komodo/stacks
       - /docker/komodo/compose:/host/compose
-    labels: # Prevent Komodo from stopping with StopAllContainers
+    labels:
       - "com.centurylinklabs.watchtower.enable=true"
       #- "com.centurylinklabs.watchtower.monitor-only"
     restart: unless-stopped
