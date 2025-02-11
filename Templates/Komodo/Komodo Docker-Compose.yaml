@@ -1,0 +1,100 @@
+services:
+  MongoDB-Komodo:
+    image: mongo:latest
+    container_name: MongoDB-Komodo
+    hostname: MongoDB-Komodo
+    command: --quiet --wiredTigerCacheSizeGB 0.25
+    logging:
+      driver: local
+    networks:
+        - network
+    # ports:
+    #   - 27017:27017
+    volumes:
+      - /docker/komodo/mongo/data:/data/db
+      - /docker/komodo/mongo/config:/data/configdb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD=PASSWORD
+    labels:  # Prevent Komodo from stopping with StopAllContainers
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+ 
+ 
+ 
+  Core-Komodo:
+    image: ghcr.io/mbecker20/komodo:latest
+    container_name: Core-Komodo
+    hostname: Core-Komodo
+    depends_on:
+      - MongoDB-Komodo
+    logging:
+      driver: local
+    networks:
+        - network
+    ports:
+      - 9120:9120
+    environment:
+      - KOMODO_HOST=http://172.16.1.21
+      - KOMODO_TITLE=Komodo
+      - KOMODO_FIRST_SERVER=http://Periphery-Komodo:8120
+      - KOMODO_DISABLE_CONFIRM_DIALOG=false
+      - KOMODO_MONITORING_INTERVAL=15-sec
+      - KOMODO_RESOURCE_POLL_INTERVAL=5-min
+      - KOMODO_WEBHOOK_SECRET=htujptdatqweqw
+      - KOMODO_JWT_SECRET=u7uojzxgzgzrhzhzhreerystyasy
+      - KOMODO_LOCAL_AUTH=true
+      - KOMODO_DISABLE_USER_REGISTRATION=false
+      - KOMODO_ENABLE_NEW_USERS=false
+      - KOMODO_DISABLE_NON_ADMIN_CREATE=false
+      - KOMODO_TRANSPARENT_MODE=false
+      - KOMODO_JWT_TTL=1-day
+      - KOMODO_OIDC_ENABLED=false
+      - KOMODO_PASSKEY=hsathsstrdukduydyk
+      - KOMODO_DATABASE_ADDRESS=MongoDB-Komodo:27017
+      - KOMODO_DATABASE_USERNAME=USERNAME
+      - KOMODO_DATABASE_PASSWORD=PASSWORD
+    volumes:
+      - /docker/komodo/core/:/repo-cache
+      ## Store sync files on server
+      # - /path/to/syncs:/syncs
+      ## Optionally mount a custom core.config.toml
+      # - /path/to/core.config.toml:/config/config.toml
+    labels: # Prevent Komodo from stopping with StopAllContainers
+      - "komodo.skip:" # Prevent Komodo from stopping with StopAllContainers
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+
+
+
+  Periphery-Komodo:
+    image: ghcr.io/mbecker20/periphery:latest
+    container_name: Periphery-Komodo
+    hostname: Periphery-Komodo
+    logging:
+      driver: local
+    networks:
+        - network
+    ports:
+      - 8120:8120
+    environment:
+      - PERIPHERY_PASSKEYS=hsathsstrdukduydyk
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc:/proc
+      - /docker/komodo/ssl-certs:/etc/komodo/ssl
+      - /docker/komodo/repos:/etc/komodo/repos
+      - /docker/komodo/stacks:/etc/komodo/stacks
+      - /docker/komodo/compose:/host/compose
+    labels: # Prevent Komodo from stopping with StopAllContainers
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+
+
+
+networks:
+  network:
+    driver: bridge
