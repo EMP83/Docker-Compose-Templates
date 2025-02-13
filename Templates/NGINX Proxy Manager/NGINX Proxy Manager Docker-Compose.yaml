@@ -18,8 +18,8 @@ services:
       - DB_MYSQL_USER=npm # To be configured in MariaDB
       - DB_MYSQL_PASSWORD=X23IFNmtyVM0reIXz5#f # To be configured in MariaDB
       - DB_MYSQL_NAME=npm # To be configured in MariaDB
-      - INITIAL_ADMIN_EMAIL=paraipanmihai@gmail.com
-      - INITIAL_ADMIN_PASSWORD=69*KT@$PvyHAad
+      - INITIAL_ADMIN_EMAIL=email@mail.com
+      - INITIAL_ADMIN_PASSWORD=hfoeb30hf.fh?kf
     volumes:
       - /docker/nginxproxymanager/data:/data
       - /docker/nginxproxymanager/letsencrypt:/etc/letsencrypt
