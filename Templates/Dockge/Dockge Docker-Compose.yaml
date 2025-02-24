@@ -1,0 +1,24 @@
+services:
+  Dockge:
+    image: louislam/dockge:1
+    container_name: Dockge
+    hostname: Dockge
+    networks:
+      - homelab
+    ports:
+      - 5001:5001
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /docker/dockge/data:/app/data
+      - /docker/dockge/stacks:/docker/dockge/stacks
+    environment:
+      - TZ=Europe/Paris
+      - DOCKGE_STACKS_DIR=/docker/dockge/stacks
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+
+networks:
+  homelab:
+    external: true

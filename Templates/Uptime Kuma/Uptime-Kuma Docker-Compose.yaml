@@ -1,0 +1,22 @@
+services:
+  Uptime-Kuma:
+    image: louislam/uptime-kuma:1
+    container_name: Uptime-Kuma
+    hostname: Uptime-Kuma
+    networks:
+      - homelab
+    volumes:
+      - /docker/uptime-kuma:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - 3001:3001
+    environment:
+      - TZ=Europe/Paris
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+
+networks:
+  homelab:
+    external: true

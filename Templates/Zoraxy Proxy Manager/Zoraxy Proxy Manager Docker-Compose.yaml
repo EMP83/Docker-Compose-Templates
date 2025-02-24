@@ -1,0 +1,22 @@
+services:
+  Zoraxy:
+    image: zoraxydocker/zoraxy:latest
+    container_name: Zoraxy
+    hostname: Zoraxy
+    restart: unless-stopped
+    networks:
+      - homelab
+    ports:
+      - 80:80
+      - 443:443
+      - 8000:8000
+    volumes:
+      - /docker/zoraxy/config/:/opt/zoraxy/config/
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/localtime:/etc/localtime
+    environment:
+      - TZ=Europe/Paris
+      - FASTGEOIP=true
+networks:
+  homelab:
+    external: true
