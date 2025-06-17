@@ -1,0 +1,61 @@
+services:
+  guacd:
+    container_name: Guacamole-Proxy
+    image: guacamole/guacd
+    hostname: Guacamole-Proxy
+    networks:
+      - homelab
+    volumes:
+    - /mnt/ZFS-NVMe/Docker/Guacamole/drive:/drive:rw
+    - /mnt/ZFS-NVMe/Docker/Guacamole/record:/record:rw
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    restart: unless-stopped
+
+  Guacamole-DB:
+    container_name: Guacamole-DB
+    image: postgres:15.2-alpine
+    hostname: Guacamole-DB
+    networks:
+        - homelab
+    environment:
+      - PGDATA=/var/lib/postgresql/data/guacamole
+      - POSTGRES_DB=guacamole
+      - POSTGRES_PASSWORD=zi#rPi%VArYUvibLwE8p
+      - POSTGRES_USER=guacamole
+    volumes:
+    - /mnt/ZFS-NVMe/Docker/Guacamole/init:/docker-entrypoint-initdb.d:z
+    - /mnt/ZFS-NVMe/Docker/Guacamole/data:/var/lib/postgresql/data:z
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    restart: unless-stopped
+
+  Guacamole-App:
+    container_name: Guacamole-App
+    image: guacamole/guacamole
+    links:
+      - guacd
+    hostname: Guacamole-Proxy
+    networks:
+        - homelab
+    ports:
+      - 8532:8080
+    depends_on:
+      - guacd
+      - Guacamole-DB
+    environment:
+      - GUACD_HOSTNAME=guacd
+      - POSTGRESQL_DATABASE=guacamole
+      - POSTGRESQL_HOSTNAME=Guacamole-DB
+      - POSTGRESQL_PASSWORD=zi#rPi%VArYUvibLwE8p
+      - POSTGRESQL_USER=guacamole
+      - RECORDING_SEARCH_PATH=/record
+    volumes:
+      - /mnt/ZFS-NVMe/Docker/Guacamole/record:/record:rw
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    restart: unless-stopped
+
+networks:
+    homelab:
+        external: true
