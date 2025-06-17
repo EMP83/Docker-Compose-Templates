@@ -1,0 +1,23 @@
+services:
+  Tautulli:
+    image: lscr.io/linuxserver/tautulli:latest
+    container_name: Tautulli
+    hostname: Tautulli
+    networks:
+      - homelab
+    ports:
+      - 8181:8181
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+    volumes:
+      - /mnt/ZFS-NVMe/Docker/Tautulli:/config
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+
+networks:
+    homelab:
+        external: true
