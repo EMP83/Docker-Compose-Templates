@@ -1,0 +1,122 @@
+services:
+  postgresql:
+    image: docker.io/library/postgres:16-alpine
+    container_name: Authentik-PostgreSQL
+    hostname: Authentik-PostgreSQL
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 5s
+    networks:
+      - homelab
+    ports:
+      - 5432:5432
+    volumes:
+      - /docker/Authentik/postgresql:/var/lib/postgresql/data
+    environment:
+      - TZ=Europe/Paris
+      - POSTGRES_PASSWORD=42UxVQFU!KL9%vxjsUdM
+      - POSTGRES_USER=authentik
+      - POSTGRES_DB=authentik
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    restart: unless-stopped
+
+
+  redis:
+    image: docker.io/library/redis:alpine
+    command: --save 60 1 --loglevel warning
+    container_name: Authentik-Redis
+    hostname: Authentik-Redis
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 3s
+    networks:
+      - homelab
+    ports:
+      - 6379:6379
+    volumes:
+      - /docker/Authentik/redis:/data
+    environment:
+      - TZ=Europe/Paris
+      - vm.overcommit_memory=1
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    restart: unless-stopped
+
+  server:
+    image: ghcr.io/goauthentik/server:2025.6.2
+    command: server
+    container_name: Authentik-Server
+    hostname: Authentik-Server
+    networks:
+      - homelab
+    ports:
+      - 7000:9000
+      - 7443:9443
+    environment:
+      - TZ=Europe/Paris
+      - AUTHENTIK_SECRET_KEY=dUhjAVNJsYiVIkqNQw85dtHNiFysLleUMuERazuKL7ky17Ui
+      - AUTHENTIK_REDIS__HOST=redis
+      - AUTHENTIK_POSTGRESQL__HOST=postgresql
+      - AUTHENTIK_POSTGRESQL__USER=authentik
+      - AUTHENTIK_POSTGRESQL__NAME=authentik
+      - AUTHENTIK_POSTGRESQL__PASSWORD=42UxVQFU!KL9%vxjsUdM
+      - AUTHENTIK_LOG_LEVEL=info # debug, info, warning, error, trace
+      - AUTHENTIK_DISABLE_STARTUP_ANALYTICS=true
+      - AUTHENTIK_DISABLE_UPDATE_CHECK=false
+      - AUTHENTIK_ERROR_REPORTING__ENABLED=false
+    volumes:
+      - /docker/Authentik/media:/media
+      - /docker/Authentik/templates:/templates
+    depends_on:
+      postgresql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    restart: unless-stopped
+
+  worker:
+    image: ghcr.io/goauthentik/server:2025.6.2
+    command: worker
+    container_name: Authentik-Worker
+    hostname: Authentik-Worker
+    user: root
+    networks:
+      - homelab
+    environment:
+      - TZ=Europe/Paris
+      - AUTHENTIK_SECRET_KEY=dUhjAVNJsYiVIkqNQw85dtHNiFysLleUMuERazuKL7ky17Ui
+      - AUTHENTIK_REDIS__HOST=redis
+      - AUTHENTIK_POSTGRESQL__HOST=postgresql
+      - AUTHENTIK_POSTGRESQL__USER=authentik
+      - AUTHENTIK_POSTGRESQL__NAME=authentik
+      - AUTHENTIK_POSTGRESQL__PASSWORD=42UxVQFU!KL9%vxjsUdM
+      - AUTHENTIK_LOG_LEVEL=info # debug, info, warning, error, trace
+      - AUTHENTIK_DISABLE_STARTUP_ANALYTICS=true
+      - AUTHENTIK_DISABLE_UPDATE_CHECK=false
+      - AUTHENTIK_ERROR_REPORTING__ENABLED=false
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /docker/Authentik/media:/media
+      - /docker/Authentik/certs:/certs
+      - /docker/Authentik/templates:/templates
+    depends_on:
+      postgresql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    restart: unless-stopped
+
+networks:
+    homelab:
+        external: true
