@@ -1,0 +1,1 @@
+If you want to use Nexterm via VPN it must be run in a VM or a LXC Container that is connected to Tailnet via Tailscale VPN

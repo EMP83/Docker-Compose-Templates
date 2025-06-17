@@ -1,0 +1,21 @@
+services:
+  nexterm:
+    image: germannewsmaker/nexterm:1.0.3-OPEN-PREVIEW
+    container_name: Nexterm
+    hostname: Nexterm
+    networks:
+      - homelab
+    ports:
+      - 6989:6989
+    environment:
+      - TZ=Europe/Paris
+      - ENCRYPTION_KEY=2f0b59cee0611e2121da31da05b1249e1dc322fd41908d1dd742c6308385a523 # Replace with your generated key
+    volumes:
+      - /mnt/ZFS-NVMe/Docker/Nexterm/config:/app/data
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    restart: unless-stopped
+    
+networks:
+    homelab:
+        external: true
