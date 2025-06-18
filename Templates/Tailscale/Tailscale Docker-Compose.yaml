@@ -5,7 +5,6 @@ services:
     hostname: Tailscale
     networks:
         - homelab
-
     volumes:
       - /docker/tailscale:/var/lib
       - /dev/net/tun:/dev/net/tun
