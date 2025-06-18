@@ -1,0 +1,27 @@
+services:
+  tailscale:
+    image: tailscale/tailscale
+    container_name: Tailscale
+    hostname: Tailscale
+    networks:
+        - homelab
+
+    volumes:
+      - /docker/tailscale:/var/lib
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - TS_AUTHKEY=tskey-auth-get a key from your Tailscale account
+      - TS_ROUTES=192.168.1.0/24
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_EXTRA_ARGS=--advertise-exit-node --accept-routes --ssh --accept-dns
+      #- TS_USERSPACE: false
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    labels:
+      - "com.centurylinklabs.watchtower.monitor-only=true"
+    restart: unless-stopped
+    
+networks:
+    homelab:
+        external: true
