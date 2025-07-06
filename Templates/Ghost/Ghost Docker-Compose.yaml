@@ -1,0 +1,48 @@
+services:
+  ghost-db:
+    image: mysql:8.0
+    container_name: Ghost-MySQL
+    hostname: Ghost-MySQL
+    networks:
+      - homelab
+    #ports:
+      #- 3306:3306
+    environment:
+      - TZ=Europe/Paris
+      - MYSQL_ROOT_PASSWORD=LG9s#ylnfkGtLn*sdfm4
+    volumes:
+      - /mnt/ZFS-NVMe/Docker/Ghost/db:/var/lib/mysql
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+    
+  ghost:
+    image: ghost:5-alpine
+    container_name: Ghost
+    hostname: Ghost
+    networks:
+      - homelab
+    ports:
+      - 2368:2368
+    environment:
+      - TZ=Europe/Paris
+      - database__client=mysql
+      - database__connection__host=ghost-db
+      - database__connection__user=root
+      - database__connection__password=LG9s#ylnfkGtLn*sdfm4
+      - database__connection__database=ghost
+      - url=http://172.16.1.20 # this url value is just an example, and is likely wrong for your environment!
+      #- NODE_ENV=development
+    volumes:
+      - /mnt/ZFS-NVMe/Docker/Ghost/content:/var/lib/ghost/content
+    depends_on:
+      - ghost-db
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      #- "com.centurylinklabs.watchtower.monitor-only"
+    restart: unless-stopped
+
+networks:
+    homelab:
+        external: true
