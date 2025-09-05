@@ -11,7 +11,7 @@ services:
       - PGID=1000
       - UMASK=002
       - TZ=Europe/Paris
-      - JELLYFIN_PublishedServerUrl=https://jellyfin.emp83.com #optional
+      - JELLYFIN_PublishedServerUrl=https://jellyfin.domain.com #optional
       - NVIDIA_VISIBLE_DEVICES=all # Hardware acceleration nVidia. If not nVidia GPU the line can be removed.
     volumes:
       - /docker/jellyfin:/config
